@@ -22,8 +22,5 @@ private:
 
 	int mId;
 	int mX;
-	int mY;
-
-	char mSendBuffer[PACKET_SIZE];
-	char mRecvBuffer[PACKET_SIZE * 10];
+	int mY;	
 };

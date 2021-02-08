@@ -13,14 +13,14 @@ Network::Network()
 
 	mId = -1;
 	mSocket = CreateSocket();
-	ZeroMemory(mSendBuffer, PACKET_SIZE);
-	ZeroMemory(mRecvBuffer, PACKET_SIZE * 10);
+	//ZeroMemory(mSendBuffer, PACKET_SIZE);
+	//ZeroMemory(mRecvBuffer, PACKET_SIZE * 10);
 
 	mTimeout.tv_sec = 0;
 	mTimeout.tv_usec = 0;
 	
 	FD_ZERO(&mReadSet);
-	FD_SET(mSocket, &mReadSet);
+	FD_SET(mSocket, &mReadSet);	
 }
 
 bool Network::ConnectServer(std::wstring_view ip, unsigned short port)
@@ -119,50 +119,50 @@ int start = GetTickCount();
 
 void Network::Process()
 {
-	while (true)
-	{		
-		select(0, &mReadSet, nullptr, nullptr, &mTimeout);
+	char recvBuffer[PACKET_SIZE * 10];
+	if (select(0, &mReadSet, nullptr, nullptr, &mTimeout) == 0)
+	{
+		return;
+	}
 
-		if (FD_ISSET(mSocket, &mReadSet))
+	if (FD_ISSET(mSocket, &mReadSet))
+	{
+		int recvCount = recv(mSocket, recvBuffer, PACKET_SIZE * 10, 0);
+		if (recvCount > 0)
 		{
-			int recvCount = recv(mSocket, mRecvBuffer, PACKET_SIZE * 10, 0);
-			if (recvCount > 0)
+			int packetCount = recvCount / PACKET_SIZE;
+
+			for (int i = 0; i < packetCount; i++)
 			{
-				int packetCount = recvCount / PACKET_SIZE;
-				
-				for (int i = 0; i < packetCount; i++)
-				{
-					int offset = PACKET_SIZE * i;
+				int offset = PACKET_SIZE * i;
 
-					char data[PACKET_SIZE];
-					CopyMemory(data, mRecvBuffer + offset, PACKET_SIZE);
+				char data[PACKET_SIZE];
+				CopyMemory(data, recvBuffer + offset, PACKET_SIZE);
 
-					MakePacket(data);
-				}
+				MakePacket(data);
 			}
 		}
+	}
 
-		auto end = GetTickCount();
+	auto end = GetTickCount();
 
-		if (end - start > delay)
-		{
-			//send...
-			int proto = 3;
-			int id = mId;
-			int x = rand() & 80;
-			int y = rand() % 23;
-			
-			CopyMemory(mSendBuffer + 0, &proto, sizeof(int));
-			CopyMemory(mSendBuffer + 4, &id, sizeof(int));
-			CopyMemory(mSendBuffer + 8, &x, sizeof(int));
-			CopyMemory(mSendBuffer + 12, &y, sizeof(int));
+	if (end - start > delay)
+	{
+		//send...
+		int proto = 3;
+		int id = mId;
+		int x = rand() & 80;
+		int y = rand() % 23;
+		
+		char sendBuffer[PACKET_SIZE];
+		CopyMemory(sendBuffer + 0, &proto, sizeof(int));
+		CopyMemory(sendBuffer + 4, &id, sizeof(int));
+		CopyMemory(sendBuffer + 8, &x, sizeof(int));
+		CopyMemory(sendBuffer + 12, &y, sizeof(int));
 
-			send(mSocket, mSendBuffer, PACKET_SIZE, 0);
+		send(mSocket, sendBuffer, PACKET_SIZE, 0);
 
-			start = GetTickCount();
-		}
-
-		ZeroMemory(mRecvBuffer, PACKET_SIZE * 10);
+		start = GetTickCount();
 	}	
 }
 

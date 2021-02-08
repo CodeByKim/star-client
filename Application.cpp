@@ -1,7 +1,8 @@
 #include "Application.h"
 
 Application::Application()
-	: mIsRun(true)
+	: mIsRun(true)	
+	, mScreen(SCREEN_WIDTH, SCREEN_HEIGHT)
 {
 
 }
@@ -19,11 +20,8 @@ void Application::Run()
 	Initialize();
 
 	while (mIsRun)
-	{
-		//패킷을 만들어서 가져온 뒤
-		//std::vector<Packet*>* packets = mNetwork.GetPackets();
-
-		//로직에 만든 패킷을 넘겨준다.
+	{		
+		mNetwork.Process();
 		Update();
 
 		Render();
@@ -39,12 +37,14 @@ void Application::Initialize()
 }
 
 std::wstring Application::InputIpAddress()
-{
-	std::wcout << L"Server IP : ";
+{	
+	/*std::wcout << L"Server IP : ";
 	std::wstring ip;
 	std::getline(std::wcin, ip);
 
-	return ip;
+	return ip;*/
+
+	return L"127.0.0.1";
 }
 
 void Application::Update()
@@ -54,7 +54,7 @@ void Application::Update()
 
 void Application::Render()
 {
-	//mScreen.Render(mGame);
+	mScreen.Render(mGame);
 }
 
 void Application::Release()

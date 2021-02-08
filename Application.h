@@ -2,6 +2,7 @@
 #include "CommonLibrary.h"
 #include "Network.h"
 #include "Screen.h"
+#include "Game.h"
 
 class Application
 {
@@ -23,6 +24,7 @@ private:
 
 	Network mNetwork;
 	Screen mScreen;	
+	Game mGame;
 	bool mIsRun;
 };
 
