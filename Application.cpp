@@ -24,7 +24,7 @@ void Application::Run()
 		std::queue<std::shared_ptr<Packet>> packets;
 		GetPackets(packets);		
 		Update(packets);
-		//Render();
+		Render();
 
 		Sleep(30);
 	}

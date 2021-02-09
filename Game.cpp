@@ -67,9 +67,7 @@ void Game::OnConnect(std::shared_ptr<Packet> packet)
 
 	GetIdPacket* pack = (GetIdPacket*)packet.get();
 	mMyPlayer = new Player(pack->id);
-	mPlayers.push_back(mMyPlayer);
-
-	
+	mPlayers.push_back(mMyPlayer);	
 }
 
 void Game::OnCreateStar(std::shared_ptr<Packet> packet)
@@ -82,6 +80,7 @@ void Game::OnCreateStar(std::shared_ptr<Packet> packet)
 	{
 		if (mPlayers[i]->GetId() == pack->id)
 		{
+			mPlayers[i]->SetPos(pack->x, pack->y);
 			return;
 		}
 	}

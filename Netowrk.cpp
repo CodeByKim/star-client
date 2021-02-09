@@ -99,7 +99,7 @@ std::shared_ptr<Packet> Network::GetPacket()
 {
 	int protocol = -1;
 	std::shared_ptr<Packet> packet;
-	CopyMemory(&protocol, mRecvBuffer, sizeof(int));
+	CopyMemory(&protocol, mRecvBuffer + mOffset, sizeof(int));
 
 	switch (protocol)
 	{

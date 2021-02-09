@@ -16,6 +16,12 @@ public:
 	{
 		return mId;
 	}
+
+	void SetPos(int x, int y)
+	{
+		mX = x;
+		mY = y;
+	}
 private:
 
 	int mId;
