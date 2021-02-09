@@ -3,26 +3,22 @@
 
 void UpKeyCommand::Execute(Game& game)
 {
-	//game.MovePlayer(UP_KEY);
-	std::cout << "UpKeyCommand" << std::endl;
+	game.MovePlayer(UP_KEY);
 }
 
 void DownKeyCommand::Execute(Game& game)
 {
-	//game.MovePlayer(DOWN_KEY);
-	std::cout << "DownKeyCommand" << std::endl;
+	game.MovePlayer(DOWN_KEY);
 }
 
 void LeftKeyCommand::Execute(Game& game)
 {
-	//game.MovePlayer(LEFT_KEY);
-	std::cout << "LeftKeyCommand" << std::endl;
+	game.MovePlayer(LEFT_KEY);
 }
 
 void RightKeyCommand::Execute(Game& game)
 {
-	//game.MovePlayer(RIGHT_KEY);
-	std::cout << "RightKeyCommand" << std::endl;
+	game.MovePlayer(RIGHT_KEY);	
 }
 
 Input::Input()

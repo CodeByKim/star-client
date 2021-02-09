@@ -1,6 +1,6 @@
 #pragma once
 #include "CommonLibrary.h"
-
+#include "ScreenBuffer.h"
 class Game;
 
 class Screen
@@ -10,14 +10,12 @@ public:
 	~Screen();
 	void Render(Game& game);
 
-private:
-	void MoveCursor(short x, short y);
-	void ClearScreen();
+private:	
 	void InvisibleCursor();
 
 	int mWidth;
-	int mHeight;	
-	char mScreenBuffer[SCREEN_HEIGHT][SCREEN_WIDTH];
-	HANDLE mConsoleHandle;
+	int mHeight;		
+	ScreenBuffer mScreenBuffer;
+	//HANDLE mConsoleHandle;
 };
 
