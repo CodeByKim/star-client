@@ -81,6 +81,8 @@ bool Network::IsRecvData()
 		return true;
 	}
 
+	FD_ZERO(&mReadSet);
+	FD_SET(mSocket, &mReadSet);
 	if (select(0, &mReadSet, nullptr, nullptr, &mTimeout) != 0)
 	{		
 		if (FD_ISSET(mSocket, &mReadSet))

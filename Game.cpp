@@ -53,11 +53,16 @@ void Game::MovePlayer(char key)
 
 void Game::Draw(ScreenBuffer& screenBuffer)
 {
-	if (mMyPlayer != nullptr)
+	/*if (mMyPlayer != nullptr)
 	{
 		mMyPlayer->Draw(screenBuffer);
-	}
+	}*/
 	
+	for(int i = 0 ; i < mPlayers.size() ; i++)
+	{
+		mPlayers[i]->Draw(screenBuffer);
+	}
+
 	//나중에는 모든 플레이어 루프돌며 Draw 호출해야 함
 }
 
