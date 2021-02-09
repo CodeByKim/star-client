@@ -5,8 +5,7 @@ Player::Player(int id)
 	: mId(id)
 	, mX(-1)
 	, mY(-1)
-{
-
+{	
 }
 
 Player::Player(int id, int x, int y)

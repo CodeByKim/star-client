@@ -74,39 +74,6 @@ bool Network::ConnectServer(std::wstring_view ip, unsigned short port)
 	return false;
 }
 
-//void MakePacket(char* data)
-//{
-//	int protocol = -1;
-//	CopyMemory(&protocol, data, sizeof(int));
-//
-//	if (protocol == 0)
-//	{
-//		std::cout << "ASSIGN_ID" << std::endl;
-//
-//		CopyMemory(&mId, data + 4, sizeof(int));
-//
-//	}
-//	else if (protocol == 1)
-//	{
-//		std::cout << "CREATE_STAR" << std::endl;
-//		/*CopyMemory(&mId, data + 4, sizeof(int));
-//		CopyMemory(&mX, data + 8, sizeof(int));
-//		CopyMemory(&mY, data + 12, sizeof(int));*/
-//	}
-//	else if (protocol == 2)
-//	{
-//
-//	}
-//	else if (protocol == 3)
-//	{
-//		std::cout << "MOVE_STAR" << std::endl;
-//		/*CopyMemory(&mId, data + 4, sizeof(int));
-//		CopyMemory(&mX, data + 8, sizeof(int));
-//		CopyMemory(&mY, data + 12, sizeof(int));*/
-//	}
-//}
-
-
 bool Network::IsRecvData()
 {
 	if (mRemainRecvCount > 0)
@@ -157,33 +124,6 @@ std::shared_ptr<Packet> Network::GetPacket()
 	mRemainRecvCount -= PACKET_SIZE;
 	mOffset += PACKET_SIZE;
 	return packet;
-
-	/*char recvBuffer[PACKET_SIZE * 10];
-	std::shared_ptr<std::queue<Packet*>> packetsQueue;
-
-	if (select(0, &mReadSet, nullptr, nullptr, &mTimeout) == 0)
-	{
-		return;
-	}
-
-	if (FD_ISSET(mSocket, &mReadSet))
-	{
-		int recvCount = recv(mSocket, recvBuffer, PACKET_SIZE * 10, 0);
-		if (recvCount > 0)
-		{
-			int packetCount = recvCount / PACKET_SIZE;
-
-			for (int i = 0; i < packetCount; i++)
-			{
-				int offset = PACKET_SIZE * i;
-
-				char data[PACKET_SIZE];
-				CopyMemory(data, recvBuffer + offset, PACKET_SIZE);
-
-				MakePacket(data);
-			}
-		}
-	}*/
 }
 
 //Network& Network::GetInstance()

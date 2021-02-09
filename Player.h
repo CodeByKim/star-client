@@ -12,7 +12,12 @@ public:
 
 	void Move(char key);
 	void Draw(ScreenBuffer& screenBuffer);
+	int GetId()
+	{
+		return mId;
+	}
 private:
+
 	int mId;
 	int mX;
 	int mY;

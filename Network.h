@@ -16,8 +16,7 @@ public:
 
 private:
 	SOCKET CreateSocket();
-	void InitializeSocketAddress(std::wstring_view ip, unsigned short port, SOCKADDR_IN* addr);
-	//void MakePacket(char* data);
+	void InitializeSocketAddress(std::wstring_view ip, unsigned short port, SOCKADDR_IN* addr);	
 
 	SOCKET mSocket;
 	TIMEVAL mTimeout;
@@ -26,7 +25,4 @@ private:
 	int mOffset;
 	int mRemainRecvCount;
 	char mRecvBuffer[PACKET_SIZE * 10];
-	/*int mId;
-	int mX;
-	int mY;	*/
 };
