@@ -4,7 +4,6 @@ Application::Application()
 	: mIsRun(true)	
 	, mScreen(SCREEN_WIDTH, SCREEN_HEIGHT)
 {
-
 }
 
 bool Application::ConnectServer()
@@ -49,7 +48,7 @@ std::wstring Application::InputIpAddress()
 
 void Application::Update()
 {
-	
+	mGame.Update();
 }
 
 void Application::Render()

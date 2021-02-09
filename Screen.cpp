@@ -32,7 +32,7 @@ void Screen::MoveCursor(short x, short y)
 
 void Screen::ClearScreen()
 {
-	memset(mScreenBuffer, '&', SCREEN_WIDTH * SCREEN_HEIGHT);
+	memset(mScreenBuffer, ' ', SCREEN_WIDTH * SCREEN_HEIGHT);
 
 	for (int i = 0; i < SCREEN_HEIGHT; i++)
 	{

@@ -16,8 +16,7 @@ private:
 	void InvisibleCursor();
 
 	int mWidth;
-	int mHeight;
-	//char** mScreenBuffer;
+	int mHeight;	
 	char mScreenBuffer[SCREEN_HEIGHT][SCREEN_WIDTH];
 	HANDLE mConsoleHandle;
 };
