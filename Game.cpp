@@ -1,14 +1,22 @@
 #include "Game.h"
 #include "Player.h"
+#include "Packet.h"
 
 Game::Game()
 {
 	mMyPlayer = new Player(10, 10, 10);
 }
 
-void Game::Update()
+void Game::Update(std::queue<std::shared_ptr<Packet>>& packets)
 {
-	// 일단 네트워크에서 패킷 받고	
+	while (!packets.empty())
+	{
+		auto packet = packets.front();
+		packets.pop();
+
+		std::cout << packet->protocol << std::endl;
+	}
+
 	// 인풋 받고
 	mInput.ProcessInput(*this);
 	// 로직 처리

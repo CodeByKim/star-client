@@ -1,4 +1,5 @@
 #include "Application.h"
+#include "Packet.h"
 
 Application::Application()
 	: mIsRun(true)	
@@ -20,10 +21,11 @@ void Application::Run()
 
 	while (mIsRun)
 	{		
-		mNetwork.Process();
-		Update();
+		std::queue<std::shared_ptr<Packet>> packets;
+		GetPackets(packets);		
+		Update(packets);
+		//Render();
 
-		Render();
 		Sleep(30);
 	}
 
@@ -33,6 +35,15 @@ void Application::Run()
 void Application::Initialize()
 {
 
+}
+
+void Application::GetPackets(std::queue<std::shared_ptr<Packet>>& packets)
+{	
+	while (mNetwork.IsRecvData())
+	{
+		auto packet = mNetwork.GetPacket();
+		packets.push(packet);
+	}
 }
 
 std::wstring Application::InputIpAddress()
@@ -46,9 +57,9 @@ std::wstring Application::InputIpAddress()
 	return L"127.0.0.1";
 }
 
-void Application::Update()
+void Application::Update(std::queue<std::shared_ptr<Packet>>& packets)
 {
-	mGame.Update();
+	mGame.Update(packets);
 }
 
 void Application::Render()

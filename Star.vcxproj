@@ -146,6 +146,7 @@
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Netowrk.cpp" />
+    <ClCompile Include="Packet.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Screen.cpp" />
     <ClCompile Include="ScreenBuffer.cpp" />
@@ -156,6 +157,7 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Network.h" />
+    <ClInclude Include="Packet.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Screen.h" />
     <ClInclude Include="ScreenBuffer.h" />

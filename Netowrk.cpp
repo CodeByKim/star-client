@@ -1,7 +1,10 @@
 #include "Network.h"
+#include "Packet.h"
 
 Network::Network()
 	: mSocket(INVALID_SOCKET)
+	, mOffset(0)
+	, mRemainRecvCount(0)
 {
 	WSADATA data;
 	int result = WSAStartup(MAKEWORD(2, 2), &data);
@@ -10,11 +13,8 @@ Network::Network()
 		std::wcout << WSAGetLastError() << std::endl;
 		return;
 	}
-
-	mId = -1;
+	
 	mSocket = CreateSocket();
-	//ZeroMemory(mSendBuffer, PACKET_SIZE);
-	//ZeroMemory(mRecvBuffer, PACKET_SIZE * 10);
 
 	mTimeout.tv_sec = 0;
 	mTimeout.tv_usec = 0;
@@ -74,52 +74,93 @@ bool Network::ConnectServer(std::wstring_view ip, unsigned short port)
 	return false;
 }
 
-/*
-IDÇÒ´ç(0)		Type(4Byte) | ID(4Byte) | ¾È¾¸(4Byte) | ¾È¾¸(4Byte)
-º°»ý¼º(1)		Type(4Byte) | ID(4Byte) | X(4Byte)     | Y(4Byte)
-º°»èÁ¦(2)		Type(4Byte) | ID(4Byte) | ¾È¾¸(4Byte) | ¾È¾¸(4Byte)
-ÀÌµ¿(3)			Type(4Byte) | ID(4Byte) | X(4Byte)     | Y(4Byte)
-*/
+//void MakePacket(char* data)
+//{
+//	int protocol = -1;
+//	CopyMemory(&protocol, data, sizeof(int));
+//
+//	if (protocol == 0)
+//	{
+//		std::cout << "ASSIGN_ID" << std::endl;
+//
+//		CopyMemory(&mId, data + 4, sizeof(int));
+//
+//	}
+//	else if (protocol == 1)
+//	{
+//		std::cout << "CREATE_STAR" << std::endl;
+//		/*CopyMemory(&mId, data + 4, sizeof(int));
+//		CopyMemory(&mX, data + 8, sizeof(int));
+//		CopyMemory(&mY, data + 12, sizeof(int));*/
+//	}
+//	else if (protocol == 2)
+//	{
+//
+//	}
+//	else if (protocol == 3)
+//	{
+//		std::cout << "MOVE_STAR" << std::endl;
+//		/*CopyMemory(&mId, data + 4, sizeof(int));
+//		CopyMemory(&mX, data + 8, sizeof(int));
+//		CopyMemory(&mY, data + 12, sizeof(int));*/
+//	}
+//}
 
-void Network::MakePacket(char* data)
+
+bool Network::IsRecvData()
 {
-	int protocol = -1;
-	CopyMemory(&protocol, data, sizeof(int));
-
-	if (protocol == 0)
+	if (mRemainRecvCount > 0)
 	{
-		std::cout << "ASSIGN_ID" << std::endl;
+		return true;
+	}
 
-		CopyMemory(&mId, data + 4, sizeof(int));
+	if (select(0, &mReadSet, nullptr, nullptr, &mTimeout) != 0)
+	{		
+		if (FD_ISSET(mSocket, &mReadSet))
+		{
+			int recvCount = recv(mSocket, mRecvBuffer, PACKET_SIZE * 10, 0);
+			mRemainRecvCount += recvCount;
+			mOffset = 0;
+			return true;
+		}
+	}
 
-	}
-	else if (protocol == 1)
-	{
-		std::cout << "CREATE_STAR" << std::endl;
-		/*CopyMemory(&mId, data + 4, sizeof(int));
-		CopyMemory(&mX, data + 8, sizeof(int));
-		CopyMemory(&mY, data + 12, sizeof(int));*/
-	}
-	else if (protocol == 2)
-	{
-
-	}
-	else if (protocol == 3)
-	{
-		std::cout << "MOVE_STAR" << std::endl;
-		/*CopyMemory(&mId, data + 4, sizeof(int));
-		CopyMemory(&mX, data + 8, sizeof(int));
-		CopyMemory(&mY, data + 12, sizeof(int));*/
-	}
+	return false;
 }
 
-int tick = 0;
-int delay = 100;
-int start = GetTickCount();
-
-void Network::Process()
+std::shared_ptr<Packet> Network::GetPacket()
 {
-	char recvBuffer[PACKET_SIZE * 10];
+	int protocol = -1;
+	std::shared_ptr<Packet> packet;
+	CopyMemory(&protocol, mRecvBuffer, sizeof(int));
+
+	switch (protocol)
+	{
+	case 0:
+		packet = std::make_shared<GetIdPacket>();
+		packet->Deserialize(mRecvBuffer + mOffset);
+		break;
+	case 1:
+		packet = std::make_shared<CreateStarPacket>();
+		packet->Deserialize(mRecvBuffer + mOffset);
+		break;
+	case 2:
+		packet = std::make_shared<RemoveStarPacket>();
+		packet->Deserialize(mRecvBuffer + mOffset);
+		break;
+	case 3:
+		packet = std::make_shared<MoveStarPacket>();
+		packet->Deserialize(mRecvBuffer + mOffset);
+		break;
+	}
+
+	mRemainRecvCount -= PACKET_SIZE;
+	mOffset += PACKET_SIZE;
+	return packet;
+
+	/*char recvBuffer[PACKET_SIZE * 10];
+	std::shared_ptr<std::queue<Packet*>> packetsQueue;
+
 	if (select(0, &mReadSet, nullptr, nullptr, &mTimeout) == 0)
 	{
 		return;
@@ -142,35 +183,14 @@ void Network::Process()
 				MakePacket(data);
 			}
 		}
-	}
-
-	auto end = GetTickCount();
-
-	if (end - start > delay)
-	{
-		//send...
-		int proto = 3;
-		int id = mId;
-		int x = rand() & 80;
-		int y = rand() % 23;
-		
-		char sendBuffer[PACKET_SIZE];
-		CopyMemory(sendBuffer + 0, &proto, sizeof(int));
-		CopyMemory(sendBuffer + 4, &id, sizeof(int));
-		CopyMemory(sendBuffer + 8, &x, sizeof(int));
-		CopyMemory(sendBuffer + 12, &y, sizeof(int));
-
-		send(mSocket, sendBuffer, PACKET_SIZE, 0);
-
-		start = GetTickCount();
-	}	
+	}*/
 }
 
-Network& Network::GetInstance()
-{
-	static Network instance;
-	return instance;
-}
+//Network& Network::GetInstance()
+//{
+//	static Network instance;
+//	return instance;
+//}
 
 SOCKET Network::CreateSocket()
 {

@@ -18,7 +18,9 @@ public:
 private:
 	void Initialize();
 	std::wstring InputIpAddress();
-	void Update();
+
+	void GetPackets(std::queue<std::shared_ptr<Packet>>& packets);
+	void Update(std::queue<std::shared_ptr<Packet>>& packets);
 	void Render();
 	void Release();
 
