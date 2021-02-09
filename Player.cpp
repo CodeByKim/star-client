@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "ScreenBuffer.h"
+#include "Application.h"
 
 Player::Player(int id)
 	: mId(id)
@@ -39,6 +40,15 @@ void Player::Move(char key)
 	{
 		mX += 1;
 	}
+
+	int proto = 3;
+	char buffer[PACKET_SIZE];
+	CopyMemory(buffer, &proto, sizeof(int));
+	CopyMemory(buffer + 4, &mId, sizeof(int));
+	CopyMemory(buffer + 8, &mX, sizeof(int));
+	CopyMemory(buffer + 12, &mY, sizeof(int));
+
+	Application::GetInstance().Send(buffer);
 }
 
 void Player::Draw(ScreenBuffer& screenBuffer)

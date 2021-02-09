@@ -12,7 +12,7 @@ public:
 	bool IsRecvData();
 	std::shared_ptr<Packet> GetPacket();
 	bool ConnectServer(std::wstring_view ip, unsigned short port);
-	//static Network& GetInstance();
+	void Send(char* buffer);
 
 private:
 	SOCKET CreateSocket();

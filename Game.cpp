@@ -34,10 +34,10 @@ void Game::ProcessPackets(std::queue<std::shared_ptr<Packet>>& packets)
 			OnCreateStar(packet);
 			break;
 		case 2:
-			OnMoveStar(packet);
+			OnRemoveStar(packet);
 			break;
 		case 3:
-			OnRemoveStar(packet);
+			OnMoveStar(packet);
 			break;
 		}
 	}
@@ -97,6 +97,15 @@ void Game::OnCreateStar(std::shared_ptr<Packet> packet)
 void Game::OnMoveStar(std::shared_ptr<Packet> packet)
 {
 	MoveStarPacket* pack = (MoveStarPacket*)packet.get();
+
+	for (int i = 0; i < mPlayers.size(); i++)
+	{
+		if (mPlayers[i]->GetId() == pack->id)
+		{
+			mPlayers[i]->SetPos(pack->x, pack->y);
+			return;
+		}
+	}
 }
 
 void Game::OnRemoveStar(std::shared_ptr<Packet> packet)

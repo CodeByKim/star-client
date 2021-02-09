@@ -12,6 +12,7 @@ public:
 
 	bool ConnectServer();
 	void Run();	
+	void Send(char* buffer);
 
 	static Application& GetInstance();
 

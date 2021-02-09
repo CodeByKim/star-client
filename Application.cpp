@@ -57,6 +57,11 @@ std::wstring Application::InputIpAddress()
 	return L"127.0.0.1";
 }
 
+void Application::Send(char* buffer)
+{
+	mNetwork.Send(buffer);
+}
+
 void Application::Update(std::queue<std::shared_ptr<Packet>>& packets)
 {
 	mGame.Update(packets);

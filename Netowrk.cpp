@@ -134,6 +134,11 @@ std::shared_ptr<Packet> Network::GetPacket()
 //	return instance;
 //}
 
+void Network::Send(char* buffer)
+{
+	send(mSocket, buffer, PACKET_SIZE, 0);
+}
+
 SOCKET Network::CreateSocket()
 {
 	SOCKET sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
