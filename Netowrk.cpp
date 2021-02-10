@@ -128,12 +128,6 @@ std::shared_ptr<Packet> Network::GetPacket()
 	return packet;
 }
 
-//Network& Network::GetInstance()
-//{
-//	static Network instance;
-//	return instance;
-//}
-
 void Network::Send(char* buffer)
 {
 	send(mSocket, buffer, PACKET_SIZE, 0);

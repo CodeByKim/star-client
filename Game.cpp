@@ -14,8 +14,6 @@ void Game::Update(std::queue<std::shared_ptr<Packet>>& packets)
 
 	// 인풋 받고
 	mInput.ProcessInput(*this);
-
-	// 로직 처리
 }
 
 void Game::ProcessPackets(std::queue<std::shared_ptr<Packet>>& packets)
@@ -111,4 +109,17 @@ void Game::OnMoveStar(std::shared_ptr<Packet> packet)
 void Game::OnRemoveStar(std::shared_ptr<Packet> packet)
 {
 	RemoveStarPacket* pack = (RemoveStarPacket*)packet.get();
+
+	for (int i = 0; i < mPlayers.size(); i++)
+	{
+		if (mPlayers[i]->GetId() == pack->id)
+		{			
+			auto iter = mPlayers.begin() + i;
+			Player* p = *iter;
+			mPlayers.erase(iter);
+			delete p;
+
+			return;
+		}
+	}
 }
